@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>WebSocket Chat</title>
+</head>
+<body>
+	<h1>WebSocket Chat</h1>
+	<form id="websocket_submission">
+		<input id="location" type="text" />
+		<input id="message" type="text" />
+	</form>
+	<footer>
+	</footer>
+	<script src="http://www.google.com/jsapi"></script>
+	<script>google.load("jquery", "1.4")</script>
+	<script>
+	function openConnection(){
+		conn = new WebSocket('ws://192.168.1.65:3000/ws');
+		conn.onopen = function(e) {
+			alert('Connection open ' + e);
+		};
+		conn.onclose = function(e) {
+			alert('Connection closed ' + e);
+		};
+		conn.onmessage = function(e){
+			alert('Message received: ' + e.data);
+		};
+		conn.onerror = function(e) {
+			alert('Error: ' + e);
+		};
+	}
+
+	openConnection();
+	$('#message').change(function(){
+	  conn.send(this.value);
+	  this.value = '';
+	});
+
+	</script>
+	</body>
+</html>
