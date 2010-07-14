@@ -8,42 +8,69 @@
 	<h1>WebSocket Chat</h1>
 	<form id="websocket_submission" method="GET">
 		<label for="location">Location</label><input id="location" name="location" type="text" />
+		<input type="button" id="websocket_location_submit" value="Change location" />
 		<br />
 		<label for="message">Message</label><input id="message" name="message" type="text" />
-		<br />
-		<a href="#" id="websocket_submit">Submit</a>
+		<input type="button" id="websocket_message_submit" disabled="disabled" value="Submit" />
 	</form>
 	<footer>
 	</footer>
 	<script src="http://www.google.com/jsapi"></script>
 	<script>google.load("jquery", "1.4")</script>
 	<script>
-	function openConnection(location){
-		if (!location || location === ""){
-			location = "ws://0.0.0.0:3000/ws";
+	$(document).ready(function(){
+		function createConnection(wsHost){
+			if (wsHost == undefined || !wsHost || wsHost === ""){
+				wsHost = "ws://0.0.0.0:3000/ws";
+			}
+			alert(wsHost);
+			conn = new WebSocket(wsHost);
+			conn.onopen = function(e) {
+				addSendEvent();
+				addChangeSourceEvent();
+				alert('Connection open ' + e);
+			};
+			conn.onclose = function(e) {
+				disableEvents();
+				alert('Connection closed ' + e);
+			};
+			conn.onmessage = function(e){
+				alert('Message received: ' + e.data);
+			};
+			conn.onerror = function(e) {
+				alert('Error: ' + e);
+			};
 		}
-		alert(location);
-		conn = new WebSocket(location);
-		conn.onopen = function(e) {
-			alert('Connection open ' + e);
-		};
-		conn.onclose = function(e) {
-			alert('Connection closed ' + e);
-		};
-		conn.onmessage = function(e){
-			alert('Message received: ' + e.data);
-		};
-		conn.onerror = function(e) {
-			alert('Error: ' + e);
-		};
-	}
+		
+		function addSendEvent(){
+			var msg = $('#message');
+			var msg_submit = $('#websocket_message_submit');
+			
+			msg_submit.attr('disabled', '');
+			
+			msg_submit.click(function(){
+				conn.send($('#message').val());
+				return false;
+			});
+		}
+		
+		function addChangeSourceEvent(){
+			var loc = $('#location');
+			var loc_submit = $('#websocket_location_submit')
+			
+			loc_submit.click(function(){
+				conn.close();
+				createConnection(loc.val());
+				return false;
+			})
+		}
+		
+		function disableEvents(){
+			$('#websocket_message_submit').unbind('click').attr('disabled', 'true');
+		}
 
-	openConnection($('#location').value);
-	$('#websocket_submit').click(function(){
-		conn.send($('#message').value);
-		return false;
+		createConnection();
 	});
-
 	</script>
 	</body>
 </html>
