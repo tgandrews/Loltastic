@@ -6,17 +6,24 @@
 </head>
 <body>
 	<h1>WebSocket Chat</h1>
-	<form id="websocket_submission">
-		<input id="location" type="text" />
-		<input id="message" type="text" />
+	<form id="websocket_submission" method="GET">
+		<label for="location">Location</label><input id="location" name="location" type="text" />
+		<br />
+		<label for="message">Message</label><input id="message" name="message" type="text" />
+		<br />
+		<a href="#" id="websocket_submit">Submit</a>
 	</form>
 	<footer>
 	</footer>
 	<script src="http://www.google.com/jsapi"></script>
 	<script>google.load("jquery", "1.4")</script>
 	<script>
-	function openConnection(){
-		conn = new WebSocket('ws://192.168.1.65:3000/ws');
+	function openConnection(location){
+		if (!location || location === ""){
+			location = "ws://0.0.0.0:3000/ws";
+		}
+		alert(location);
+		conn = new WebSocket(location);
 		conn.onopen = function(e) {
 			alert('Connection open ' + e);
 		};
@@ -31,10 +38,10 @@
 		};
 	}
 
-	openConnection();
-	$('#message').change(function(){
-	  conn.send(this.value);
-	  this.value = '';
+	openConnection($('#location').value);
+	$('#websocket_submit').click(function(){
+		conn.send($('#message').value);
+		return false;
 	});
 
 	</script>

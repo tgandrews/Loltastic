@@ -1,1 +1,2 @@
+#!/bin/sh
 rackup -s thin -p 3000 --env production
