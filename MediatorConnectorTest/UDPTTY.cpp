@@ -20,11 +20,9 @@ UDPTTY::UDPTTY(std::string & s, int port) {
 	udp::endpoint endpoint(address, port);
 	udp::socket socket(io_service);
 	socket.open(udp::v4());
-	char end = '\255';
 	while (true) {
 		std::string s;
-		std::cin >> s;
-		s.append(&end);
+		std::getline(std::cin, s);
 		socket.send_to(boost::asio::buffer(s), endpoint);
 	}
 }
