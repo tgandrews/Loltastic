@@ -21,6 +21,7 @@ UDPTTY::UDPTTY(std::string & s, int port) {
 	udp::socket socket(io_service);
 	socket.open(udp::v4());
 	char end = '\255';
+	std::cin >> std::noskipws;
 	while (true) {
 		std::string s;
 		std::cin >> s;
