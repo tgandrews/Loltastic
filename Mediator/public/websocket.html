@@ -23,7 +23,6 @@
 			if (wsHost == undefined || !wsHost || wsHost === ""){
 				wsHost = "ws://0.0.0.0:3000/ws";
 			}
-			alert(wsHost);
 			conn = new WebSocket(wsHost);
 			conn.onopen = function(e) {
 				addSendEvent();
@@ -59,7 +58,9 @@
 			var loc_submit = $('#websocket_location_submit')
 			
 			loc_submit.click(function(){
-				conn.close();
+				if (conn.readyState != conn.CLOSED){
+					conn.close();
+				}
 				createConnection(loc.val());
 				return false;
 			})
