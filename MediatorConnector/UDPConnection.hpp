@@ -12,12 +12,10 @@
 
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 using boost::asio::ip::udp;
 
-class UDPConnection: public Connection, public boost::enable_shared_from_this<UDPConnection> {
+class UDPConnection: public Connection {
 public:
 	UDPConnection(boost::asio::io_service & io_service, int port);
 	virtual ~UDPConnection();

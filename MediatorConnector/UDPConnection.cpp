@@ -8,6 +8,7 @@
 #include "UDPConnection.hpp"
 
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 UDPConnection::UDPConnection(boost::asio::io_service & io_service, int port) :
@@ -25,7 +26,7 @@ void UDPConnection::handle_receive(const boost::system::error_code & error, std:
 	if (!error || error == boost::asio::error::message_size) {
 		boost::shared_ptr<std::string> message( new std::string(__recv_buffer.elems) );
 		__socket.async_send_to(boost::asio::buffer(*message), __remote_endpoint,
-				boost::bind(&UDPConnection::handle_send, shared_from_this(),
+				boost::bind(&UDPConnection::handle_send, this,
 						 boost::asio::placeholders::error,
 						 boost::asio::placeholders::bytes_transferred));
 	}
