@@ -18,7 +18,6 @@ class WebsocketController < Cramp::Controller::Websocket
   def test_request
     puts "Web socket connection requested"
     yield
-    #halt 500, {'Content-Type' => 'text/plain'}, "Invalid ID"
   end
   
   private
